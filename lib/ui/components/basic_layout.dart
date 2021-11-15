@@ -1,11 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:menu_deliver_app/providers/menu_provider.dart';
+import 'package:menu_deliver_app/ui/top.dart';
+import 'package:menu_deliver_app/view_model/view_model.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 
-class BasicLayoutWidget extends StatelessWidget {
-  //const HeaderWidget({Key? key}) : super(key: key);
+import '../MenuView.dart';
 
-  final Widget body;
-  const BasicLayoutWidget(this.body);
+class BasicLayoutWidget extends ConsumerStatefulWidget {
+  const BasicLayoutWidget(this.body, {Key? key}) : super(key: key);
+
+  final Widget? body;
+  //const BasicLayoutWidget();
+
+  @override
+  ConsumerState<BasicLayoutWidget> createState() => _BasicLayoutWidgetState(body);
+}
+
+class _BasicLayoutWidgetState extends ConsumerState<BasicLayoutWidget> {
+
+  final Widget? body;
+
+  _BasicLayoutWidgetState(this.body);
+
+  ViewModel _viewModel = ViewModel();
+
+  static List<Widget> _pageList = [
+    TopWidget(),
+    TopWidget(),
+    TopWidget(),
+    TopWidget(),
+    MenuView(),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel.setRef(ref);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,23 +53,43 @@ class BasicLayoutWidget extends StatelessWidget {
           ),
         ]),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            IconButton(icon: Icon(Icons.menu), onPressed: () {}),
-            Spacer(),
-            IconButton(icon: Icon(Icons.search), onPressed: () {}),
-            IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.red,
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'ホーム',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.article),
+            label: '記事',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dining),
+            label: '献立',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.question_answer),
+            label: '質問',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '設定',
+          ),
+        ],
+        currentIndex: _viewModel.tabIndex,
+        onTap: ((index) =>
+        {
+          //Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false),
+          _viewModel.changeTab(index)
+        }),
       ),
-      floatingActionButton:
-      FloatingActionButton(child: Icon(Icons.add), onPressed: () {}),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: Container(
         //margin: EdgeInsets.only(bottom: 20.0),
-        padding: EdgeInsets.only(bottom: 20.0),
-        child: body,
+        //padding: EdgeInsets.only(bottom: 20.0),
+        child: body ?? _pageList[_viewModel.tabIndex],
       ),
     );
   }

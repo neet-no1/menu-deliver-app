@@ -4,32 +4,44 @@ import 'package:flutter_flavorizr/parser/models/flavors/flavor.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:menu_deliver_app/ui/MenuView.dart';
 import 'package:menu_deliver_app/ui/components/basic_layout.dart';
+import 'package:menu_deliver_app/ui/components/component_base.dart';
 import 'package:menu_deliver_app/ui/top.dart';
+import 'package:menu_deliver_app/view_model/view_model.dart';
 
 void main() {
-  FlavorConfig(
-      name: "LOCAL",
-      variables: {
-        "baseUrl": "http://10.0.2.2:48080",
-        "s3Url": "https://www.menu-deliver.com",
-      }
-  );
-
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+
+  ViewModel _viewModel = ViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('mainwidget init');
+
+    _viewModel.setRef(ref);
+    _viewModel.loadNewArrivalMenus();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Startup Name Generator',
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const BasicLayoutWidget(TopWidget()),
-        '/menu_view': (context) => const BasicLayoutWidget(MenuView()),
-      },
+        title: 'Startup Name Generator',
+        initialRoute: '/',
+        routes: {
+          '/': (context) => BasicLayoutWidget(null),
+          '/menu_view': (context) => const ComponentBase(MenuView()),
+        },
     );
   }
 }

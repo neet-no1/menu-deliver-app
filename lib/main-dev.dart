@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'app.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'flavors.dart';
+import 'main.dart';
 
 void main() {
   F.appFlavor = Flavor.DEV;
-  runApp(App());
+  runApp(ProviderScope(child: MyApp()));
 }

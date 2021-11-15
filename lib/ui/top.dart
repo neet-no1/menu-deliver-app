@@ -1,14 +1,37 @@
 import 'dart:collection';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:menu_deliver_app/util/model_ext.dart';
+import 'package:menu_deliver_app/util/openapi_factory.dart';
+import 'package:menu_deliver_app/view_model/view_model.dart';
 
 import 'components/media_card.dart';
 import 'components/media_card_large.dart';
 import 'components/slick.dart';
 
-class TopWidget extends StatelessWidget {
-  const TopWidget({Key? key}) : super(key: key);
+class TopWidget extends ConsumerStatefulWidget {
+  const TopWidget(
+{
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  ConsumerState<TopWidget> createState() => _TopWidgetState();
+}
+
+class _TopWidgetState extends ConsumerState<TopWidget> {
+  late ViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('topwidget init');
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +57,7 @@ class TopWidget extends StatelessWidget {
             ],
           ),
         ),
-        MediaCard(size),
+        MediaCard(size),//_viewModel.newArrivalMenus),
         RichText(
           text: TextSpan(
             style: DefaultTextStyle.of(context).style,
@@ -96,4 +119,3 @@ class Eyecatch extends StatelessWidget {
     ]);
   }
 }
-
